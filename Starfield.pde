@@ -1,21 +1,25 @@
 boolean[] direction = {false,false,false,false};
-Human person;
-int Width = 1000;
-int Height = 1000;
+int Width = 2000;
+int Height = 2000;
 ArrayList<Particle> asteroids = new ArrayList<Particle>();
 ArrayList<OddballParticle> stars = new ArrayList<OddballParticle>();
 int score = 0;
+PVector velocity = new PVector(0,0);
+float acceleration = 0.01;
+float friction = 0.99;
+int maxSpeed = 10;
 void setup()
 {
-  size(1000,1000);
-  person = new Human();
+  size(2000,2000);
   asteroids = new ArrayList<Particle>();
   stars = new ArrayList<OddballParticle>();
-  score = 0;
+  background(0);
 }
 
 void generate(){
-  asteroids.add(new Particle());
+  if(Math.random()<0.9){
+    asteroids.add(new Particle());
+  }
   if(Math.random()<0.01){
     stars.add(new OddballParticle());
   }
@@ -23,13 +27,15 @@ void generate(){
 
 void draw()
 {
-  background(0);
+  fill(0, 70);
+  rect(0,0,width,height);
   generate();
-  person.move();
+  move();
   for(int i=asteroids.size()-1;i>=0;i--){
     if(asteroids.get(i).isOutOfBounds()){
       asteroids.remove(i);
     } else{
+      asteroids.get(i).vel.add(velocity);
       asteroids.get(i).move();
     }
   }
@@ -42,19 +48,33 @@ void draw()
   }
 }
 
+void move(){
+  if(direction[0]) velocity.y-=acceleration;
+  if(direction[1]) velocity.x-=acceleration;
+  if(direction[2]) velocity.y+=acceleration;   
+  if(direction[3]) velocity.x+=acceleration;
+  velocity.limit(maxSpeed);
+  velocity.mult(friction);
+}
+
 class Particle
 {
-  float angle,speed;
+  float angle,speed,size,dist;
   PVector pos,vel;
   Particle(){
     angle = (float)(Math.random()*(2*Math.PI));
-    speed = (float)(Math.random()*10);
+    speed = (float)(Math.random()*10)+5;
+    size = 0;
+    dist = 0.0;
     pos = new PVector(Width/2,Height/2);
     vel = new PVector(cos(angle),sin(angle));
     vel.mult(speed);
   }
   void move(){
     pos.add(vel);
+    dist = dist(pos.x,pos.y,Width/2,Height/2);
+    size = dist*0.03;
+    speed -= 0.01*dist;
     show();
   }
   void show(){
@@ -62,7 +82,7 @@ class Particle
     translate(pos.x,pos.y);
     rotate(angle);
     fill(81,81,85);
-    ellipse(0,0,10,10);
+    ellipse(0,0,size,size);
     popMatrix();
   }
   boolean isOutOfBounds(){
@@ -74,7 +94,9 @@ class OddballParticle extends Particle
 {
   OddballParticle(){
     angle = (float)(Math.random()*(2*Math.PI));
-    speed = (float)(Math.random()*5);
+    speed = (float)(Math.random()*5)+5;
+    size = 10;
+    dist = 0.0;
     pos = new PVector(Width/2,Height/2);
     vel = new PVector(cos(angle),sin(angle));
     vel.mult(speed);
@@ -84,37 +106,11 @@ class OddballParticle extends Particle
     translate(pos.x,pos.y);
     rotate(angle);
     fill(253,204,13);
+    ellipse(0,0,size,size);
     popMatrix();
   }
 }
 
-class Human{
-  PVector vel,pos;
-  float acceleration = 0.5;
-  float friction = 0.99;
-  int maxSpeed = 20;
-  Human(){
-    vel = new PVector(0,0);
-    pos = new PVector(Width/2,Height/2);
-  }
-  void move(){
-    if(direction[0]) vel.y-=acceleration;
-    if(direction[1]) vel.x-=acceleration;
-    if(direction[2]) vel.y+=acceleration;
-    if(direction[3]) vel.x+=acceleration;
-    vel.limit(maxSpeed);
-    vel.mult(friction);     
-    pos.add(vel);
-    person.show();
-  }
-  void show(){
-    fill(255);
-    pos.x = constrain(pos.x,10,Width-10);
-    pos.y = constrain(pos.y,10,Height-10);     
-    ellipse(pos.x,pos.y,20,20);
-  }
-}
- 
 void keyPressed(){
   if(key=='w') direction[0]=true;
   if(key=='a') direction[1]=true;
