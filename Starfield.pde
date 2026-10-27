@@ -72,7 +72,7 @@ class Particle
   }
   void move(){
     pos.add(vel);
-    distance = distance(pos.x,pos.y,Width/2,Height/2);
+    distance = dist(pos.x,pos.y,Width/2,Height/2);
     size = distance*0.03;
     speed -= 0.01*distance;
     show();
