@@ -1,6 +1,6 @@
 boolean[] direction = {false,false,false,false};
-int Width = 2000;
-int Height = 2000;
+int Width = 1000;
+int Height = 1000;
 ArrayList<Particle> asteroids = new ArrayList<Particle>();
 ArrayList<OddballParticle> stars = new ArrayList<OddballParticle>();
 int score = 0;
@@ -10,7 +10,7 @@ float friction = 0.99;
 int maxSpeed = 10;
 void setup()
 {
-  size(2000,2000);
+  size(1000,1000);
   asteroids = new ArrayList<Particle>();
   stars = new ArrayList<OddballParticle>();
   background(0);
