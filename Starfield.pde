@@ -59,22 +59,22 @@ void move(){
 
 class Particle
 {
-  float angle,speed,size,dist;
+  float angle,speed,size,distance;
   PVector pos,vel;
   Particle(){
     angle = (float)(Math.random()*(2*Math.PI));
     speed = (float)(Math.random()*10)+5;
     size = 0;
-    dist = 0.0;
+    distance = 0.0;
     pos = new PVector(Width/2,Height/2);
     vel = new PVector(cos(angle),sin(angle));
     vel.mult(speed);
   }
   void move(){
     pos.add(vel);
-    dist = dist(pos.x,pos.y,Width/2,Height/2);
-    size = dist*0.03;
-    speed -= 0.01*dist;
+    distance = distance(pos.x,pos.y,Width/2,Height/2);
+    size = distance*0.03;
+    speed -= 0.01*distance;
     show();
   }
   void show(){
@@ -96,7 +96,7 @@ class OddballParticle extends Particle
     angle = (float)(Math.random()*(2*Math.PI));
     speed = (float)(Math.random()*5)+5;
     size = 10;
-    dist = 0.0;
+    distance = 0.0;
     pos = new PVector(Width/2,Height/2);
     vel = new PVector(cos(angle),sin(angle));
     vel.mult(speed);
