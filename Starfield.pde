@@ -43,6 +43,7 @@ void draw()
     if(stars.get(i).isOutOfBounds()){
       stars.remove(i);
     } else{
+      stars.get(i).vel.add(velocity);
       stars.get(i).move();
     }
   }
