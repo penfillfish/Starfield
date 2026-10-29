@@ -8,6 +8,8 @@ PVector velocity = new PVector(0,0);
 float acceleration = 0.01;
 float friction = 0.99;
 int maxSpeed = 10;
+int blinkTimer =0;
+int blinkDuration =30;
 void setup()
 {
   size(1000,1000);
@@ -31,6 +33,7 @@ void draw()
   rect(0,0,width,height);
   generate();
   move();
+  float num;
   for(int i=asteroids.size()-1;i>=0;i--){
     Particle a = asteroids.get(i);
     if(a.isOutOfBounds()){
@@ -52,6 +55,19 @@ void draw()
       s.vel.add(velocity);
       s.move();
     }
+  }
+  if(mousePressed){
+    blinkTimer++;
+    float progress = map(blinkTimer, 0, blinkDuration, 0, PI);
+    num = sin(progress);
+    for(Particle a:asteroids){
+      a.pos.lerp(new PVector(a.pos.x,Height/2),0.85*num);
+    }
+    for(Particle s:stars){
+      s.pos.lerp(new PVector(s.pos.x,Height/2),0.85*num);
+    }
+  }else{
+    blinkTimer =0;
   }
 }
 
@@ -81,6 +97,7 @@ class Particle
   }
   void move(){
     pos.add(vel);
+    if(bounces!=2){pos.lerp(new PVector(Width/2,Height/2),0.04);}
     distance = dist(pos.x,pos.y,Width/2,Height/2);
     size = distance*0.03;
     speed -= 0.01*distance;
