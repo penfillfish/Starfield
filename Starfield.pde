@@ -32,19 +32,25 @@ void draw()
   generate();
   move();
   for(int i=asteroids.size()-1;i>=0;i--){
-    if(asteroids.get(i).isOutOfBounds()){
-      asteroids.remove(i);
-    } else{
-      asteroids.get(i).vel.add(velocity);
-      asteroids.get(i).move();
+    Particle a = asteroids.get(i);
+    if(a.isOutOfBounds()){
+      if(a.bounces>0&&velocity!= new PVector(0,0)){
+        a.bounce();
+      }else{asteroids.remove(i);}
+    }else{
+      a.vel.add(velocity);
+      a.move();
     }
   }
   for(int i=stars.size()-1;i>=0;i--){
-    if(stars.get(i).isOutOfBounds()){
-      stars.remove(i);
+    OddballParticle s = stars.get(i);
+    if(s.isOutOfBounds()){
+      if(s.bounces>0&&velocity!= new PVector(0,0)){
+        s.bounce();
+      }else{stars.remove(i);}
     } else{
-      stars.get(i).vel.add(velocity);
-      stars.get(i).move();
+      s.vel.add(velocity);
+      s.move();
     }
   }
 }
@@ -60,9 +66,11 @@ void move(){
 
 class Particle
 {
+  int bounces;
   float angle,speed,size,distance;
   PVector pos,vel;
   Particle(){
+    bounces = 2;
     angle = (float)(Math.random()*(2*Math.PI));
     speed = (float)(Math.random()*10)+5;
     size = 0;
@@ -89,11 +97,29 @@ class Particle
   boolean isOutOfBounds(){
     return pos.x<0||pos.y<0||pos.x>Width||pos.y>Height;
   }
+  void bounce(){
+    if(pos.x<0){
+      pos.x=0;
+      vel.x*=-1;
+    }else if(pos.x>Width){
+      pos.x=Width;
+      vel.x*=-1;
+    }
+    if(pos.y<0){
+      pos.y=0;
+      vel.y*=-1;
+    }else if(pos.y>Height){
+      pos.y=Height;
+      vel.y*=-1;
+    }
+    bounces--;
+  }
 }
 
 class OddballParticle extends Particle
 {
   OddballParticle(){
+    bounces = 8;
     angle = (float)(Math.random()*(2*Math.PI));
     speed = (float)(Math.random()*5)+5;
     size = 10;
