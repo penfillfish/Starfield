@@ -61,10 +61,10 @@ void draw()
     float progress = map(blinkTimer, 0, blinkDuration, 0, PI);
     num = sin(progress);
     for(Particle a:asteroids){
-      a.pos.lerp(new PVector(a.pos.x,Height/2),0.85*num);
+      a.pos.y+=(Height/2-a.pos.y)*0.85*num;
     }
     for(Particle s:stars){
-      s.pos.lerp(new PVector(s.pos.x,Height/2),0.85*num);
+      s.pos.y+=(Height/2-s.pos.y)*0.85*num;
     }
   }else{
     blinkTimer =0;
