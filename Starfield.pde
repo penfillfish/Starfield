@@ -97,7 +97,10 @@ class Particle
   }
   void move(){
     pos.add(vel);
-    if(bounces!=2){pos.lerp(new PVector(Width/2,Height/2),0.04);}
+    if(bounces!=2){
+      pos.x+=(Height/2-pos.x)*0.04;
+      pos.y+=(Height/2-pos.y)*0.04;
+    }
     distance = dist(pos.x,pos.y,Width/2,Height/2);
     size = distance*0.03;
     speed -= 0.01*distance;
